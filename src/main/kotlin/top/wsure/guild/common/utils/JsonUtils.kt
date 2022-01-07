@@ -8,6 +8,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.reflect.full.memberProperties
 
 object JsonUtils {
     val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -54,5 +55,10 @@ object JsonUtils {
                     logger.warn("format string to json failed !! string :{}", this, it)
                 }
             }.getOrNull()
+    }
+
+    inline fun <reified T : Any> T.toMap():Map<String,String>{
+        val props = T::class.memberProperties.associateBy { it.name }
+        return props.keys.associateWith { props[it]?.get(this).toString() }
     }
 }
