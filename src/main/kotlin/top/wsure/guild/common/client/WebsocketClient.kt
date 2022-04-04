@@ -34,28 +34,28 @@ abstract class WebsocketClient(
     }
 
     override fun reconnect(){
-        logger.debug("set needReconnect :true")
+        logger.trace("set needReconnect :true")
         needReconnect.set(true)
     }
     override fun connected(){
-        logger.debug("set needReconnect :false")
+        logger.trace("set needReconnect :false")
         needReconnect.set(false)
     }
 
     override fun disconnect() {
-        logger.debug("disconnect !")
+        logger.trace("disconnect !")
         retryTimer.cancel()
         if(!connectWebSocket.close(1000,"reconnect")) connectWebSocket.cancel()
     }
 
     private fun doReconnect(){
         if(!connectWebSocket.close(1000,"reconnect")) connectWebSocket.cancel()
-        logger.info("do reconnect ... ")
+        logger.debug("do reconnect ... ")
         connectWebSocket = wsClient.newWebSocket(wsRequest,this)
     }
 
     override fun sendMessage(text: String){
-        logger.info("send text message $text")
+        logger.debug("send text message $text")
         connectWebSocket.send(text)
     }
 
